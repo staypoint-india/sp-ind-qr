@@ -7,48 +7,91 @@
     <link rel="manifest" href="manifest.json">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #0d1b2a; color: white; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: #1b263b; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        img.logo { width: 120px; margin-bottom: 10px; }
-        button { background: #415a77; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        input { width: 80%; padding: 10px; border-radius: 5px; border: none; margin-bottom: 10px; }
-        #reader { width: 100%; border-radius: 10px; overflow: hidden; }
-        #qrcode-result { margin-top: 20px; padding: 10px; background: white; display: inline-block; border-radius: 10px; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align: center; background: #0d1b2a; color: white; padding: 20px; margin: 0; }
+        .container { max-width: 450px; margin: 20px auto; background: #1b263b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        
+        /* App Share Icon Styling */
+        .app-share-container { position: absolute; top: 20px; right: 20px; }
+        .app-share-btn { background: rgba(27, 154, 170, 0.2); border: none; color: #1b9aaa; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .app-share-btn:hover { background: #1b9aaa; color: white; }
+
+        img.logo { width: 110px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3)); border-radius: 12px; }
+        h1 { font-size: 22px; margin-bottom: 25px; letter-spacing: 1.5px; color: #e0e1dd; font-weight: 700; }
+
+        .nav-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .nav-link { background: #415a77; color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 600; flex: 1; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .nav-link:hover { background: #778da9; }
+        .nav-link.active { background: #1b9aaa; }
+
+        input { width: 100%; padding: 15px; border-radius: 12px; border: none; margin-bottom: 20px; box-sizing: border-box; background: #e0e1dd; color: #0d1b2a; font-size: 16px; outline: none; font-weight: 500; }
+        
+        #reader { width: 100%; border-radius: 15px; overflow: hidden; background: #000; border: 2px solid #415a77; }
+        
+        #qrcode-result { margin-top: 20px; padding: 15px; background: white; display: inline-block; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        
+        .action-area { margin-top: 25px; display: none; flex-direction: column; gap: 10px; }
+        .btn-row { display: flex; gap: 10px; justify-content: center; }
+        
+        .action-btn { border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; flex: 1; font-size: 14px; }
+        
+        .download-btn { background: #1b9aaa; color: white; }
+        .whatsapp-btn { background: #25D366; color: white; }
+        
+        #scanned-result-box { margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px dashed #415a77; word-break: break-all; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="logo.png" alt="SP IND QR Logo" class="logo">
+    <div class="app-share-container">
+        <button class="app-share-btn" onclick="shareApp()" title="Share App">
+            <i class="fa-solid fa-share-nodes"></i>
+        </button>
+    </div>
+    
+    <img src="logo.png" alt="SP IND QR" class="logo">
     <h1>SP IND QR</h1>
 
-    <div>
-        <button onclick="showScanner()">Scan QR Code</button>
-        <button onclick="showGenerator()">Generate QR Code</button>
+    <div class="nav-tabs">
+        <button class="nav-link" onclick="showScanner()"><i class="fa-solid fa-expand"></i> Scan</button>
+        <button class="nav-link" onclick="showGenerator()"><i class="fa-solid fa-plus"></i> Create</button>
     </div>
 
     <div id="scanner-section" class="hidden">
         <div id="reader"></div>
-        <p id="scanned-result"></p>
+        <div id="scanned-result-box" class="hidden"></div>
     </div>
 
     <div id="generator-section" class="hidden">
-        <input type="text" id="qr-input" placeholder="Enter URL or Text">
-        <br>
-        <button onclick="generateQR()">Create QR</button>
+        <input type="text" id="qr-input" placeholder="Paste link or type text...">
+        <button class="nav-link" style="width: 100%; background: #1b9aaa;" onclick="generateQR()">
+            <i class="fa-solid fa-gear"></i> Generate QR Code
+        </button>
+        
         <div id="qrcode-result"></div>
+        
+        <div id="action-area" class="action-area">
+            <div class="btn-row">
+                <button class="action-btn download-btn" onclick="downloadQR()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Download
+                </button>
+                <button class="action-btn whatsapp-btn" onclick="shareWhatsApp()">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
 
-    // Show Scanner
     function showScanner() {
         document.getElementById('scanner-section').classList.remove('hidden');
         document.getElementById('generator-section').classList.add('hidden');
@@ -58,30 +101,75 @@
             { facingMode: "environment" }, 
             { fps: 10, qrbox: { width: 250, height: 250 } },
             qrCodeMessage => {
-                document.getElementById('scanned-result').innerHTML = `Result: <a href="${qrCodeMessage}" style="color:cyan">${qrCodeMessage}</a>`;
+                const resBox = document.getElementById('scanned-result-box');
+                resBox.classList.remove('hidden');
+                resBox.innerHTML = `<span style="color:#aaa; font-size:12px;">SCANNED RESULT:</span><br><a href="${qrCodeMessage}" target="_blank" style="color:#1b9aaa; font-weight:bold; text-decoration:none;">${qrCodeMessage}</a>`;
             }
-        ).catch(err => console.error("Error: ", err));
+        ).catch(err => console.error("Camera error:", err));
     }
 
-    // Show Generator
     function showGenerator() {
         document.getElementById('generator-section').classList.remove('hidden');
         document.getElementById('scanner-section').classList.add('hidden');
     }
 
-    // Generate QR Code
     function generateQR() {
         const input = document.getElementById('qr-input').value;
         const resultDiv = document.getElementById('qrcode-result');
+        const actionArea = document.getElementById('action-area');
+        
         resultDiv.innerHTML = "";
-        if(input) {
+        if(input.trim() !== "") {
             new QRCode(resultDiv, {
                 text: input,
                 width: 200,
-                height: 200
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
+            actionArea.style.display = "flex";
         } else {
-            alert("Please enter a link!");
+            alert("Please enter a valid URL or text.");
+        }
+    }
+
+    function downloadQR() {
+        const canvas = document.querySelector('#qrcode-result canvas');
+        const img = document.querySelector('#qrcode-result img');
+        const link = document.createElement("a");
+        link.download = "SP-IND-QR-Code.png";
+        
+        if (canvas) {
+            link.href = canvas.toDataURL("image/png");
+        } else {
+            link.href = img.src;
+        }
+        link.click();
+    }
+
+    function shareWhatsApp() {
+        const input = document.getElementById('qr-input').value;
+        const waUrl = "https://wa.me/?text=" + encodeURIComponent("Generated via SP IND QR: " + input);
+        window.open(waUrl, '_blank');
+    }
+
+    function shareApp() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'SP IND QR',
+                text: 'Try this fast QR Scanner & Generator App!',
+                url: window.location.href
+            }).catch(err => console.log('Error sharing:', err));
+        } else {
+            // Fallback for browsers that don't support native share
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert("App link copied to clipboard!");
         }
     }
 </script>
