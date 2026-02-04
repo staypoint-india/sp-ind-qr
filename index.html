@@ -13,69 +13,80 @@
         body { font-family: 'Segoe UI', Roboto, sans-serif; text-align: center; background: #0d1b2a; color: white; padding: 20px; margin: 0; }
         .container { max-width: 450px; margin: 10px auto; background: #1b263b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         
-        /* Icons & Logo */
-        .app-share-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #1b9aaa; font-size: 22px; cursor: pointer; }
+        /* Navigation & Header */
+        .app-share-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #1b9aaa; font-size: 22px; cursor: pointer; transition: 0.3s; }
+        .app-share-btn:hover { color: #25D366; }
         img.logo { width: 100px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3)); border-radius: 15px; }
         h1 { font-size: 22px; margin-bottom: 20px; letter-spacing: 1px; color: #e0e1dd; }
 
-        /* Buttons Styling */
+        /* Navigation Tabs */
         .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .nav-btn { background: #415a77; color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 600; flex: 1; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
         .nav-btn:hover { background: #778da9; }
         
-        /* APK Download Button Styling */
-        .apk-download-btn { background: #e63946; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: bold; margin-bottom: 25px; border: none; width: 100%; cursor: pointer; }
+        /* APK Download Button */
+        .apk-download-btn { background: #e63946; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 25px; border: none; width: 100%; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3); }
+        .apk-download-btn:hover { background: #ff4d5a; transform: translateY(-2px); }
 
-        input { width: 100%; padding: 14px; border-radius: 10px; border: none; margin-bottom: 15px; box-sizing: border-box; background: #e0e1dd; color: #0d1b2a; font-size: 16px; outline: none; }
+        input { width: 100%; padding: 14px; border-radius: 10px; border: none; margin-bottom: 15px; box-sizing: border-box; background: #e0e1dd; color: #0d1b2a; font-size: 16px; outline: none; font-weight: 500; }
         
+        /* Scanner & Result Styling */
         #reader { width: 100%; border-radius: 15px; overflow: hidden; background: #000; border: 2px solid #415a77; }
-        #qrcode-result { margin-top: 20px; padding: 15px; background: white; display: inline-block; border-radius: 15px; }
+        #qrcode-result { margin-top: 20px; padding: 15px; background: white; display: inline-block; border-radius: 15px; border: 5px solid #fff; }
         
         .action-area { margin-top: 20px; display: none; flex-direction: column; gap: 10px; }
         .btn-row { display: flex; gap: 10px; }
-        .action-btn { border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .action-btn { border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-size: 14px; }
         
-        .download-btn { background: #1b9aaa; color: white; }
+        .save-btn { background: #1b9aaa; color: white; }
         .whatsapp-btn { background: #25D366; color: white; }
         
-        #scanned-result { margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; word-break: break-all; }
+        #scanned-result-box { margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px dashed #415a77; word-break: break-all; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button class="app-share-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
+    <button class="app-share-btn" onclick="shareApp()" title="Share App Link">
+        <i class="fa-solid fa-share-nodes"></i>
+    </button>
     
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="SP IND QR Logo" class="logo">
     <h1>SP IND QR</h1>
 
     <a href="app-release.apk" download="SP_IND_QR.apk" style="text-decoration: none;">
         <button class="apk-download-btn">
-            <i class="fa-solid fa-file-arrow-down"></i> Download APK for File Manager
+            <i class="fa-solid fa-file-arrow-down"></i> Download App for File Manager
         </button>
     </a>
 
     <div class="nav-tabs">
-        <button class="nav-btn" onclick="showScanner()"><i class="fa-solid fa-camera"></i> Scan</button>
-        <button class="nav-btn" onclick="showGenerator()"><i class="fa-solid fa-plus"></i> Create</button>
+        <button class="nav-btn" onclick="showScanner()">
+            <i class="fa-solid fa-camera"></i> Scan QR
+        </button>
+        <button class="nav-btn" onclick="showGenerator()">
+            <i class="fa-solid fa-plus"></i> Create QR
+        </button>
     </div>
 
     <div id="scanner-section" class="hidden">
         <div id="reader"></div>
-        <div id="scanned-result" class="hidden"></div>
+        <div id="scanned-result-box" class="hidden"></div>
     </div>
 
     <div id="generator-section" class="hidden">
-        <input type="text" id="qr-input" placeholder="Enter link or text...">
-        <button class="nav-btn" style="width: 100%; background: #1b9aaa;" onclick="generateQR()">Generate QR Code</button>
+        <input type="text" id="qr-input" placeholder="Paste link or type text here...">
+        <button class="nav-btn" style="width: 100%; background: #1b9aaa;" onclick="generateQR()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Now
+        </button>
         
         <div id="qrcode-result"></div>
         
         <div id="action-area" class="action-area">
             <div class="btn-row">
-                <button class="action-btn download-btn" onclick="downloadQR()">
-                    <i class="fa-solid fa-download"></i> Save Image
+                <button class="action-btn save-btn" onclick="downloadQR()">
+                    <i class="fa-solid fa-image"></i> Save Image
                 </button>
                 <button class="action-btn whatsapp-btn" onclick="shareWhatsApp()">
                     <i class="fa-brands fa-whatsapp"></i> WhatsApp
@@ -86,7 +97,7 @@
 </div>
 
 <script>
-    // Register Service Worker for PWA
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
@@ -99,65 +110,13 @@
             { facingMode: "environment" }, 
             { fps: 10, qrbox: { width: 250, height: 250 } },
             qrCodeMessage => {
-                const res = document.getElementById('scanned-result');
-                res.classList.remove('hidden');
-                res.innerHTML = `<strong>Result:</strong><br><a href="${qrCodeMessage}" target="_blank" style="color:#1b9aaa">${qrCodeMessage}</a>`;
+                const resBox = document.getElementById('scanned-result-box');
+                resBox.classList.remove('hidden');
+                resBox.innerHTML = `<small style="color:#778da9">SCANNED RESULT:</small><br><a href="${qrCodeMessage}" target="_blank" style="color:#1b9aaa; font-weight:bold; text-decoration:none;">${qrCodeMessage}</a>`;
             }
-        ).catch(err => console.error(err));
+        ).catch(err => console.error("Scanner error:", err));
     }
 
-    function showGenerator() {
-        document.getElementById('generator-section').classList.remove('hidden');
-        document.getElementById('scanner-section').classList.add('hidden');
-    }
-
-    function generateQR() {
-        const input = document.getElementById('qr-input').value;
-        const resultDiv = document.getElementById('qrcode-result');
-        const actionArea = document.getElementById('action-area');
-        
-        resultDiv.innerHTML = "";
-        if(input.trim() !== "") {
-            new QRCode(resultDiv, {
-                text: input,
-                width: 200,
-                height: 200
-            });
-            actionArea.style.display = "flex";
-        } else {
-            alert("Please enter a link or text first!");
-        }
-    }
-
-    function downloadQR() {
-        const canvas = document.querySelector('#qrcode-result canvas');
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "SP-IND-QR-Code.png";
-        link.click();
-    }
-
-    function shareWhatsApp() {
-        const input = document.getElementById('qr-input').value;
-        const url = "https://wa.me/?text=" + encodeURIComponent("Generated via SP IND QR: " + input);
-        window.open(url, '_blank');
-    }
-
-    function shareApp() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'SP IND QR',
-                text: 'Download this awesome QR Scanner & Generator App!',
-                url: window.location.href
-            });
-        } else {
-            alert("Share Link: " + window.location.href);
-        }
-    }
-</script>
-
-</body>
-</html>
     function showGenerator() {
         document.getElementById('generator-section').classList.remove('hidden');
         document.getElementById('scanner-section').classList.add('hidden');
@@ -175,32 +134,27 @@
                 width: 200,
                 height: 200,
                 colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                colorLight : "#ffffff"
             });
             actionArea.style.display = "flex";
         } else {
-            alert("Please enter a valid URL or text.");
+            alert("Please enter a link or some text!");
         }
     }
 
     function downloadQR() {
         const canvas = document.querySelector('#qrcode-result canvas');
-        const img = document.querySelector('#qrcode-result img');
-        const link = document.createElement("a");
-        link.download = "SP-IND-QR-Code.png";
-        
         if (canvas) {
+            const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
-        } else {
-            link.href = img.src;
+            link.download = "SP-IND-QR-Code.png";
+            link.click();
         }
-        link.click();
     }
 
     function shareWhatsApp() {
         const input = document.getElementById('qr-input').value;
-        const waUrl = "https://wa.me/?text=" + encodeURIComponent("Generated via SP IND QR: " + input);
+        const waUrl = "https://wa.me/?text=" + encodeURIComponent("Created via SP IND QR: " + input);
         window.open(waUrl, '_blank');
     }
 
@@ -208,18 +162,11 @@
         if (navigator.share) {
             navigator.share({
                 title: 'SP IND QR',
-                text: 'Try this fast QR Scanner & Generator App!',
+                text: 'Fastest QR Scanner & Generator App. Try it now!',
                 url: window.location.href
-            }).catch(err => console.log('Error sharing:', err));
+            }).catch(err => console.log('Sharing failed', err));
         } else {
-            // Fallback for browsers that don't support native share
-            const dummy = document.createElement('input');
-            document.body.appendChild(dummy);
-            dummy.value = window.location.href;
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
-            alert("App link copied to clipboard!");
+            alert("Copy & Share App Link: " + window.location.href);
         }
     }
 </script>
