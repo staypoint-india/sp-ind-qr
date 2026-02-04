@@ -1,6 +1,6 @@
 {
   "name": "SP IND QR",
-  "short_name": "SP QR",
+  "short_name": "SP IND QR",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0d1b2a",
