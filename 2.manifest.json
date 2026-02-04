@@ -1,0 +1,15 @@
+{
+  "name": "SP IND QR",
+  "short_name": "SP QR",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0d1b2a",
+  "theme_color": "#1b263b",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

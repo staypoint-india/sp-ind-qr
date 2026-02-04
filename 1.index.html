@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP IND QR</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #0d1b2a; color: white; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: #1b263b; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        img.logo { width: 120px; margin-bottom: 10px; }
+        button { background: #415a77; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        input { width: 80%; padding: 10px; border-radius: 5px; border: none; margin-bottom: 10px; }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; }
+        #qrcode-result { margin-top: 20px; padding: 10px; background: white; display: inline-block; border-radius: 10px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="logo.png" alt="SP IND QR Logo" class="logo">
+    <h1>SP IND QR</h1>
+
+    <div>
+        <button onclick="showScanner()">Scan QR Code</button>
+        <button onclick="showGenerator()">Generate QR Code</button>
+    </div>
+
+    <div id="scanner-section" class="hidden">
+        <div id="reader"></div>
+        <p id="scanned-result"></p>
+    </div>
+
+    <div id="generator-section" class="hidden">
+        <input type="text" id="qr-input" placeholder="Enter URL or Text">
+        <br>
+        <button onclick="generateQR()">Create QR</button>
+        <div id="qrcode-result"></div>
+    </div>
+</div>
+
+<script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+
+    // Show Scanner
+    function showScanner() {
+        document.getElementById('scanner-section').classList.remove('hidden');
+        document.getElementById('generator-section').classList.add('hidden');
+        
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            qrCodeMessage => {
+                document.getElementById('scanned-result').innerHTML = `Result: <a href="${qrCodeMessage}" style="color:cyan">${qrCodeMessage}</a>`;
+            }
+        ).catch(err => console.error("Error: ", err));
+    }
+
+    // Show Generator
+    function showGenerator() {
+        document.getElementById('generator-section').classList.remove('hidden');
+        document.getElementById('scanner-section').classList.add('hidden');
+    }
+
+    // Generate QR Code
+    function generateQR() {
+        const input = document.getElementById('qr-input').value;
+        const resultDiv = document.getElementById('qrcode-result');
+        resultDiv.innerHTML = "";
+        if(input) {
+            new QRCode(resultDiv, {
+                text: input,
+                width: 200,
+                height: 200
+            });
+        } else {
+            alert("Please enter a link!");
+        }
+    }
+</script>
+
+</body>
+</html>
